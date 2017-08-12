@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lieb.j.traininspection.Inspection">
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:elevation="20dp"
+        android:onClick="onClickNext"
+        android:text="Continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/btnFinish"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btnPrevious"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:elevation="20dp"
+        android:onClick="onClickPrevious"
+        android:text="Previous"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/lblInspection"
+        android:layout_width="wrap_content"
+        android:layout_height="77dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:text="Bad Order Form"
+        android:textAlignment="center"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtDetails"
+        android:layout_width="585dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="93dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <GridLayout
+        android:id="@+id/gridWW"
+        android:layout_width="431dp"
+        android:layout_height="397dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:columnCount="2"
+        android:rowCount="8"
+        android:visibility="invisible"
+        app:layout_constraintHorizontal_bias="0.729"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="0.966">
+
+        <TextView
+            android:id="@+id/lblCoupler"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="2"
+            android:text="Coupler"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblDG"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="3"
+            android:text="Draft Gear"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblERB"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="4"
+            android:text="End Roof and Body"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblBrakes"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="1"
+            android:text="Brakes"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblFrame"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="5"
+            android:text="Frame"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblTruck"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="6"
+            android:text="Truck"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblOther"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="7"
+            android:text="Other"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <TextView
+            android:id="@+id/lblApp"
+            android:layout_width="295dp"
+            android:layout_height="48dp"
+            android:layout_column="0"
+            android:layout_marginLeft="16dp"
+            android:layout_row="0"
+            android:text="With: appliance"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="365dp" />
+
+        <CheckBox
+            android:id="@+id/App"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:text="App"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/Coupler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:text="Coupler"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/DG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="3"
+            android:text="DG"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/ERB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="4"
+            android:text="ERB"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/Other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="7"
+            android:text="Other"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/Frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="5"
+            android:text="Frame"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/KTruck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="6"
+            android:text="KTruck"
+            android:textColor="@android:color/transparent" />
+
+        <CheckBox
+            android:id="@+id/Brakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:text="Brakes"
+            android:textColor="@android:color/transparent" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="585dp"
+        android:layout_height="430dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="93dp"
+        android:columnCount="2"
+        android:rowCount="6"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="313dp"
+            android:layout_height="82dp"
+            android:layout_column="0"
+            android:layout_marginTop="0dp"
+            android:layout_row="0"
+            android:text="Reporting Mark:"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="58dp" />
+
+        <Switch
+            android:id="@+id/swtchWrong"
+            android:layout_width="314dp"
+            android:layout_height="103dp"
+            android:layout_column="0"
+            android:layout_row="4"
+            android:checked="false"
+            android:text="Any Defects?"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="408dp"
+            tools:layout_editor_absoluteY="672dp" />
+
+        <EditText
+            android:id="@+id/txtRM"
+            android:layout_width="247dp"
+            android:layout_height="82dp"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:editable="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="338dp"
+            tools:layout_editor_absoluteY="125dp" />
+
+        <TextView
+            android:id="@+id/lblType"
+            android:layout_width="313dp"
+            android:layout_height="82dp"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="Car Type:"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            tools:layout_editor_absoluteX="39dp"
+            tools:layout_editor_absoluteY="27dp" />
+
+        <EditText
+            android:id="@+id/txtType"
+            android:layout_width="247dp"
+            android:layout_height="82dp"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="338dp"
+            tools:layout_editor_absoluteY="125dp" />
+
+    </GridLayout>
+
+</android.support.constraint.ConstraintLayout>
