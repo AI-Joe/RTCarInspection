@@ -44,7 +44,6 @@ proguard/
 captures/
 
 # Intellij
-*.iml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
@@ -55,7 +54,6 @@ captures/
 *.jks
 
 # External native build folder generated in Android Studio 2.2 and later
-.externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
@@ -65,3 +63,8 @@ freeline.py
 freeline/
 freeline_project_description.json
 >>>>>>> e87c3b3b2832a13e8b8b118c7ba4324a28c29c33
+app/libs/
+app/src/main/res/drawable-hdpi/
+app/src/main/res/drawable-mdpi/
+app/src/main/res/drawable-xhdpi/
+app/src/main/res/drawable-xxhdpi/
