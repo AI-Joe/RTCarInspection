@@ -6,6 +6,10 @@ package com.lieb.j.traininspection;
  * Penn State University
  */
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.cloudant.client.api.ClientBuilder;
@@ -14,7 +18,17 @@ import com.cloudant.client.api.Database;
 import com.cloudant.client.api.model.IndexField;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Properties;
+
 public class WWUpdate extends AsyncTask<JsonObject, Void, Void> {
+        private Context context;
+        public WWUpdate(Context myContext){
+            this.context = myContext;
+        }
         /**
          * Thread for updating the whats-wrong database when a button is changed from red to green or inspection is submitted.
          * @params Cars is the Car that is clicked
@@ -22,9 +36,18 @@ public class WWUpdate extends AsyncTask<JsonObject, Void, Void> {
         @Override
         protected Void doInBackground(JsonObject...Cars) {
             try {
-                CloudantClient client = ClientBuilder.account("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                        .username("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                        .password("0a7515ddc83c641eb087259025e244e5f3b3d80e7fe8ff2dd871940cbf028993")
+
+                InputStream is = context.getAssets().open("cloudantclient.properties");
+                InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+                BufferedReader br = new BufferedReader(ir);
+
+                String username = br.readLine().substring(8);
+                String account = br.readLine().substring(9);
+                String pass = br.readLine().substring(9);
+                
+                CloudantClient client = ClientBuilder.account(account)
+                        .username(username)
+                        .password(pass)
                         .build();
 
                 String dbname = "whats-wrong";
@@ -47,7 +70,7 @@ public class WWUpdate extends AsyncTask<JsonObject, Void, Void> {
 
                 return null;
             } catch (Exception e) {
-                
+
                 return null;
             }
         }

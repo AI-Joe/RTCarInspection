@@ -7,6 +7,7 @@
 package com.lieb.j.traininspection;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,7 +25,11 @@ import com.cloudant.client.api.Database;
 import com.cloudant.client.api.model.FindByIndexOptions;
 import com.cloudant.client.api.model.IndexField;
 import com.google.gson.JsonObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,7 +76,7 @@ public class TrainList extends Activity {
     Threads off the main UI thread for network security
      */
     protected void getTrain() throws IOException {
-        new CClient() {
+        new CClient(this) {
             @Override
             /**
              * puts together the TrainList GUI by giving each of the car ids a button that changes color red/green depending on its physical state.
@@ -132,7 +137,7 @@ public class TrainList extends Activity {
                                                 JsonObject j = new JsonObject();
                                                 j.addProperty("_id", b.getText().toString());
                                                 j.addProperty("Update", false);
-                                                new WWUpdate().execute(j);
+                                                new WWUpdate(TrainList.this).execute(j);
 
                                             }
                                         });
@@ -258,7 +263,7 @@ public class TrainList extends Activity {
      */
     public void updateSW(final CharSequence id) {
         CarID = id.toString();
-        new CClient().execute(CarID);
+        new CClient(this).execute(CarID);
 
     }
 }
@@ -266,6 +271,10 @@ public class TrainList extends Activity {
  * Thread to access cloudant account and query train-inspection db for cars that have the same train ID that the user is asking for
  */
 class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
+    private Context context;
+    public CClient(Context myContext){
+        this.context = myContext;
+    }
     /**
      * Connects to my bluemix cloudant client and is a thread off of the Main UI for network Security
      * Currently uses the admin username/password/account--this needs to be changed to API keys.
@@ -276,10 +285,18 @@ class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
     @Override
     protected List<JsonObject> doInBackground(CharSequence... Cars) {
         try {
-            //This needs to be an api key rather than my main username/pass
-            CloudantClient client = ClientBuilder.account("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                    .username("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                    .password("0a7515ddc83c641eb087259025e244e5f3b3d80e7fe8ff2dd871940cbf028993")
+
+            InputStream is = context.getAssets().open("cloudantclient.properties");
+            InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+            BufferedReader br = new BufferedReader(ir);
+
+            String username = br.readLine().substring(8);
+            String account = br.readLine().substring(9);
+            String pass = br.readLine().substring(9);
+
+            CloudantClient client = ClientBuilder.account(account)
+                    .username(username)
+                    .password(pass)
                     .build();
 
             String dbname = "train-inspection"; //database name

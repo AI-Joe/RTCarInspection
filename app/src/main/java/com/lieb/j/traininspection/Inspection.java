@@ -98,7 +98,7 @@ public class Inspection extends AppCompatActivity {
      * findCarSpecs autofills the inspection page with reporting mark and type information
      */
     public void findCarSpecs(final String str_id){
-        new CClient(){
+        new CClient(this){
             @Override
             protected List<JsonObject> doInBackground(CharSequence... Cars) {
 
@@ -333,7 +333,7 @@ public class Inspection extends AppCompatActivity {
                     JsonObject j = makeWW(true);
 
                     //adds with Key: Carid, strWW to the database
-                    new WWUpdate().execute(j);
+                    new WWUpdate(Inspection.this).execute(j);
 
                     i.putExtra("Details", getIntent().getExtras().getStringArray("Details"));
                     strWW.clear();
@@ -354,7 +354,7 @@ public class Inspection extends AppCompatActivity {
             Cid = "g" + Cid;
             CharSequence c = Cid;
 
-            new CClient().execute(c);
+            new CClient(this).execute(c);
 
             startActivity(i);
         }else{

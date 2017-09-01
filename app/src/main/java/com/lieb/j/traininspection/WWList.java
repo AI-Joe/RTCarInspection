@@ -6,6 +6,7 @@
 
 package com.lieb.j.traininspection;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,10 @@ import com.cloudant.client.api.Database;
 import com.cloudant.client.api.model.FindByIndexOptions;
 import com.cloudant.client.api.model.IndexField;
 import com.google.gson.JsonObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -77,7 +82,7 @@ public class WWList extends AppCompatActivity {
      * @param tid train id charsequence
      */
     public void populateList(CharSequence tid){
-        new WWClient() {
+        new WWClient(this) {
             @Override
             protected void onPostExecute(List<JsonObject> results) {
                 LinearLayout lv = (LinearLayout) findViewById(R.id.llWrong);
@@ -113,6 +118,10 @@ public class WWList extends AppCompatActivity {
     }
 }
 class WWClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
+    private Context context;
+    public WWClient(Context myContext){
+        this.context = myContext;
+    }
     /**
      * Accesses Whats-wrong database and querys with the index created for trains with matching trainids
      * @param Cars
@@ -121,9 +130,18 @@ class WWClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
     @Override
         protected List<JsonObject> doInBackground(CharSequence...Cars) {
             try {
-                CloudantClient client = ClientBuilder.account("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                        .username("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                        .password("0a7515ddc83c641eb087259025e244e5f3b3d80e7fe8ff2dd871940cbf028993")
+
+                InputStream is = context.getAssets().open("cloudantclient.properties");
+                InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+                BufferedReader br = new BufferedReader(ir);
+
+                String username = br.readLine().substring(8);
+                String account = br.readLine().substring(9);
+                String pass = br.readLine().substring(9);
+
+                CloudantClient client = ClientBuilder.account(account)
+                        .username(username)
+                        .password(pass)
                         .build();
 
                 String dbname = "whats-wrong";  //database name
