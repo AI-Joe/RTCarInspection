@@ -1,5 +1,7 @@
 # RTCarInspection
 Rail Transport Inspections automated via android application for maximum effiecency
+**There is no CloudantClient.properties file in the assets folder because it contains sensitive information.
+
 
 Login>>PreInspection>>WWList>>TrainList-->Inspection-->>PostInspection
                                       
