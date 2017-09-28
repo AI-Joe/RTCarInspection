@@ -86,6 +86,7 @@ public class WWList extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<JsonObject> results) {
                 LinearLayout lv = (LinearLayout) findViewById(R.id.llWrong);
+
                 TextView lblWW = (TextView) findViewById(R.id.lblwwList);
                 lblWW.setText("Cars with issues:");
                 lblWW.setTextSize(lv.getWidth() / 20);
@@ -98,17 +99,19 @@ public class WWList extends AppCompatActivity {
                         //String loc = r.get("loc").toString();
                         //loc = loc.substring(1,loc.length()-1);
 
+                        // needs to have spaces between whats wrong
                         String Cid = r.get("_id").toString();
                         Cid = Cid.substring(1, Cid.length() - 1);
 
-
                         TextView txtOb = new TextView(WWList.this);
+                        //txtOb.setLayoutParams(lv.getLayoutParams());
+
+                        String car = "Car id: " + Cid + "\n";
+                        String issues = "Issues: " + obj;
 
 
-                        txtOb.setText("Car id: " + Cid + "\n"
-                                + "Issues: " + obj + "\n________________________________________________________\n");
+                        txtOb.setText(car + issues  + "\n__________________________________________\n");
                         txtOb.setTextSize(30);
-
                         lv.addView(txtOb);
                     }
 

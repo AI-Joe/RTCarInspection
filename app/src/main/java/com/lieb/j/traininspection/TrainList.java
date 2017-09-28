@@ -30,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -77,6 +78,7 @@ public class TrainList extends Activity {
      */
     protected void getTrain() throws IOException {
         new CClient(this) {
+            private ArrayList<String> btnColor = new ArrayList<>();
             @Override
             /**
              * puts together the TrainList GUI by giving each of the car ids a button that changes color red/green depending on its physical state.
@@ -109,8 +111,10 @@ public class TrainList extends Activity {
 
                             if (boolSW) {
                                 btnCars.setBackgroundColor(Color.RED);
+                                btnColor.add("R"+CarID);
                             } else {
                                 btnCars.setBackgroundColor(Color.GREEN);
+                                btnColor.add("G"+CarID);
                             }
 
                             btnCars.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +125,19 @@ public class TrainList extends Activity {
                                 @Override
                                 public void onClick(final View v) {
                                     //if the button is clicked and not already green, it changes the color to green and updates S_W attribute
+
                                     final Button b = (Button) v;
+                                    String id = b.getText().toString();
+                                    String match = "";
+                                    for(String n:btnColor){
+                                        if(id.equals(n.substring(1))){
+                                            match = n;
+                                        }
+                                    }
+                                    if(match.substring(0,1).equals("R")) {
+                                        btnColor.remove(match);
+                                        match = "G" + match.substring(1);
+                                        btnColor.add(match);
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(TrainList.this);
                                         ListView lv = new ListView(TrainList.this);
@@ -148,6 +164,7 @@ public class TrainList extends Activity {
 
                                         AlertDialog alertWW = builder.create();
                                         alertWW.show();
+                                    }
                                 }
                             });
                             btnCars.setOnLongClickListener(new View.OnLongClickListener() {
@@ -157,7 +174,19 @@ public class TrainList extends Activity {
                                 @Override
                                 public boolean onLongClick(final View v) {
                                     //if the button is longclicked and not already red, it changes the color to red and updates S_W attribute
+
                                     final Button b = (Button) v;
+
+                                    String id = b.getText().toString();
+                                    String match = "";
+                                    for(String n:btnColor){
+                                        if(id.equals(n.substring(1))){
+                                            match = n;
+                                        }
+                                    }
+                                    btnColor.remove(match);
+                                    match = "R" + match.substring(1);
+                                    btnColor.add(match);
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(TrainList.this);
                                     ListView lv = new ListView(TrainList.this);
@@ -271,7 +300,7 @@ public class TrainList extends Activity {
  * Thread to access cloudant account and query train-inspection db for cars that have the same train ID that the user is asking for
  */
 class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
-    private Context context;
+    public Context context;
     public CClient(Context myContext){
         this.context = myContext;
     }

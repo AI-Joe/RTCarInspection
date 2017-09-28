@@ -7,18 +7,26 @@
 package com.lieb.j.traininspection;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import android.app.AlertDialog;
@@ -101,38 +109,51 @@ public class Inspection extends AppCompatActivity {
         new CClient(this){
             @Override
             protected List<JsonObject> doInBackground(CharSequence... Cars) {
+            try {
+                InputStream is = context.getAssets().open("cloudantclient.properties");
+                InputStreamReader ir = new InputStreamReader(is, "UTF-8");
+                BufferedReader br = new BufferedReader(ir);
 
-                    CloudantClient client = ClientBuilder.account("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                            .username("68210c1a-d572-410c-a691-0e05d6aa78ad-bluemix")
-                            .password("0a7515ddc83c641eb087259025e244e5f3b3d80e7fe8ff2dd871940cbf028993")
-                            .build();
+                String username = br.readLine().substring(8);
+                String account = br.readLine().substring(9);
+                String pass = br.readLine().substring(9);
 
-                    String dbname = "train-inspection";
+                CloudantClient client = ClientBuilder.account(account)
+                        .username(username)
+                        .password(pass)
+                        .build();
 
-                    Database dbCars = client.database(dbname, true);
-                    dbCars.createIndex("trainid", "trainid", "json", new IndexField[]{
-                            new IndexField("trainid", IndexField.SortOrder.asc),
-                            new IndexField("loc", IndexField.SortOrder.asc),
-                            new IndexField("_id", IndexField.SortOrder.asc),
-                            new IndexField("reportingmark", IndexField.SortOrder.asc),
-                            new IndexField("S_W", IndexField.SortOrder.asc),
-                            new IndexField("type", IndexField.SortOrder.asc)
-                    });
+                String dbname = "train-inspection";
 
-                    JsonObject j = (JsonObject)(dbCars.find(JsonObject.class, str_id));
+                Database dbCars = client.database(dbname, true);
+                dbCars.createIndex("trainid", "trainid", "json", new IndexField[]{
+                        new IndexField("trainid", IndexField.SortOrder.asc),
+                        new IndexField("loc", IndexField.SortOrder.asc),
+                        new IndexField("_id", IndexField.SortOrder.asc),
+                        new IndexField("reportingmark", IndexField.SortOrder.asc),
+                        new IndexField("S_W", IndexField.SortOrder.asc),
+                        new IndexField("type", IndexField.SortOrder.asc)
+                });
 
-                    j.addProperty("reportingmark", j.get("reportingmark").toString());
-                    j.addProperty("type", j.get("type").toString());
-                    j.addProperty("S_W", j.get("S_W").getAsBoolean());
+                JsonObject j = (JsonObject)(dbCars.find(JsonObject.class, str_id));
 
-                    List<JsonObject> L_j = new ArrayList<JsonObject>();
-                    L_j.add(j);
+                j.addProperty("reportingmark", j.get("reportingmark").toString());
+                j.addProperty("type", j.get("type").toString());
+                j.addProperty("S_W", j.get("S_W").getAsBoolean());
+
+                List<JsonObject> L_j = new ArrayList<JsonObject>();
+                L_j.add(j);
 
 
 
-                    return L_j;
+                return L_j;
+            }catch (IOException ex){
 
             }
+            return null;
+            }
+
+
             @Override
             /**
              * adds the car information to the inspection UI
@@ -271,8 +292,20 @@ public class Inspection extends AppCompatActivity {
         final ArrayList<String> WW = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         boolean[] is_checked = new boolean[WCBW.size()];
-        ListView lv = new ListView(this);
+        final EditText options = new EditText(Inspection.this);
+        final Switch sw = new Switch(Inspection.this);
+        options.setTextSize(20);
+        sw.setTextSize(20);
 
+        sw.setText("Turn on for A side, and Off for B side");
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT/2,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+
+        LinearLayout ll = new LinearLayout(Inspection.this);
+        ll.setLayoutParams(lp);
+        ll.setOrientation(LinearLayout.VERTICAL);
 
         final String[] strWCBW = new String[WCBW.size()];
         for(int i =0; i<WCBW.size(); i++){
@@ -280,8 +313,10 @@ public class Inspection extends AppCompatActivity {
         }
 
 
-        builder.setTitle("Select What is Wrong:");
-        builder.setView(lv);
+        builder.setTitle("Select Which side, and What is Wrong:");
+
+
+
         builder.setMultiChoiceItems(strWCBW, is_checked, new DialogInterface.OnMultiChoiceClickListener() {
             public void onClick(DialogInterface dialog, int which, boolean isChecked){
                 if(isChecked){
@@ -292,15 +327,42 @@ public class Inspection extends AppCompatActivity {
                 }
             }
         });
+
+
+
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for(int i= 0; i<WW.size(); i++) {
                     strWW.add(WW.get(i));
                 }
+
+                String strOpt = options.getText().toString();
+
+
+                if(strOpt.equals("Enter Specifics")){
+                    strOpt = "";
+                }
+
+                if(sw.isChecked()){
+                    strOpt += " A side";
+                }
+                else{
+                    strOpt += " B side";
+                }
+
+                strWW.add(strOpt);
             }});
 
+        ll.addView(options);
+        ll.addView(sw);
+
         AlertDialog AW = builder.create();
+        options.setBackgroundColor(Color.WHITE);
+        options.setTextColor(Color.BLACK);
+        options.setText("Enter Specifics");
+
+        AW.setView(ll);
         AW.show();
 
     }
@@ -394,7 +456,13 @@ public class Inspection extends AppCompatActivity {
     }
 
     public void onClickPrevious(View view){
-        Intent i = new Intent(this, PreInspection.class);
+        Intent i = new Intent(this, TrainList.class);
+        String[] strDetails = new String[3];
+        strDetails[0]=" ";
+        strDetails[1]=" ";
+        strDetails[2]= TrainList.TrainID;
+
+        i.putExtra("Details", strDetails);
         startActivity(i);
     }
 
