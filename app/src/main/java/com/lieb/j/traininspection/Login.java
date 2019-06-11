@@ -189,18 +189,20 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor> 
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
 
             Intent i = new Intent(Login.this, PreInspection.class);
+            i.putExtra("Username", email);
             startActivity(i);
         }
     }
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.length() > 2;
     }
 
     private boolean isPasswordValid(String password) {

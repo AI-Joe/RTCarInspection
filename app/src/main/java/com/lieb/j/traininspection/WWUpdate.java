@@ -52,17 +52,13 @@ public class WWUpdate extends AsyncTask<JsonObject, Void, Void> {
 
                 String dbname = "whats-wrong";
 
-                Database dbCars = client.database(dbname, true);
-                dbCars.createIndex("trainid", "trainid", "json", new IndexField[]{
-                        new IndexField("trainid", IndexField.SortOrder.asc),
-                        new IndexField("W_W", IndexField.SortOrder.asc),
-                        new IndexField("_id", IndexField.SortOrder.asc)
-                });
+                Database dbCars = client.database(dbname, false);
 
                 JsonObject C = Cars[0];
 
                 //updates the whats-wrong database
                 if(C.get("Update").getAsBoolean() == true) {
+                    //dbCars.remove(dbCars.find(JsonObject.class, C.get("_id").toString().substring(1,C.get("_id").toString().length()-1)));
                     dbCars.save(C);
                 }else{
                     dbCars.remove(dbCars.find(JsonObject.class, C.get("_id").toString().substring(1,C.get("_id").toString().length()-1)));
