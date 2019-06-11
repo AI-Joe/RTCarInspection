@@ -6,6 +6,7 @@
 
 package com.lieb.j.traininspection;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,10 +15,12 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
@@ -33,6 +36,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The Trainlist Class pulls specific train information from the cloudant server in the train-inspection database
@@ -43,7 +48,6 @@ import java.util.List;
 public class TrainList extends Activity {
     static String TrainID;
     static String CarID = "d";
-    static String Date;
 
 
     /**
@@ -76,13 +80,16 @@ public class TrainList extends Activity {
     /*
     Threads off the main UI thread for network security
      */
+    public List<JsonObject> BOL = new ArrayList<>();
     protected void getTrain() throws IOException {
-        new CClient(this) {
+        @SuppressLint("StaticFieldLeak")
+        final AsyncTask<CharSequence, Void, List<JsonObject>> execute = new CClient(this) {
             private ArrayList<String> btnColor = new ArrayList<>();
+
             @Override
-            /**
-             * puts together the TrainList GUI by giving each of the car ids a button that changes color red/green depending on its physical state.
-             * @params result is returned from the query done in doinbackground()
+            /*
+              puts together the TrainList GUI by giving each of the car ids a button that changes color red/green depending on its physical state.
+              @params result is returned from the query done in doinbackground()
              */
             protected void onPostExecute(final List<JsonObject> result) {
                 LinearLayout GridCars = (LinearLayout) findViewById(R.id.CarsLayout);
@@ -90,11 +97,20 @@ public class TrainList extends Activity {
                 lblCars.setText("\bCars in Train: " + TrainID);
                 lblCars.setTextSize(75);
 
+                BOL = result;
                 //if the user doesnt enter anything or leaves it blank
 
-                if (TrainID.equals("Enter Train ID") || result.size() == 0) {
-                    lblCars.setText("Invalid Train ID, Please ReEnter TrainID.");
+                if (TrainID.equals("Enter Train ID") || result.size() == 0 || result==null) {
+                    lblCars.setText("Invalid Train ID, Please Enter a Train ID that has cars.");
                     lblCars.setTextColor(Color.RED);
+                    final Intent n = new Intent(TrainList.this, PreInspection.class);
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            startActivity(n);
+                        }
+                    }, 3000);
                 } else {
                     try {
                         //goes through each train checking for their S_W attribute to give the button a color
@@ -111,10 +127,10 @@ public class TrainList extends Activity {
 
                             if (boolSW) {
                                 btnCars.setBackgroundColor(Color.RED);
-                                btnColor.add("R"+CarID);
+                                btnColor.add("R" + CarID);
                             } else {
                                 btnCars.setBackgroundColor(Color.GREEN);
-                                btnColor.add("G"+CarID);
+                                btnColor.add("G" + CarID);
                             }
 
                             btnCars.setOnClickListener(new View.OnClickListener() {
@@ -129,12 +145,12 @@ public class TrainList extends Activity {
                                     final Button b = (Button) v;
                                     String id = b.getText().toString();
                                     String match = "";
-                                    for(String n:btnColor){
-                                        if(id.equals(n.substring(1))){
+                                    for (String n : btnColor) {
+                                        if (id.equals(n.substring(1))) {
                                             match = n;
                                         }
                                     }
-                                    if(match.substring(0,1).equals("R")) {
+                                    if (match.substring(0, 1).equals("R")) {
                                         btnColor.remove(match);
                                         match = "G" + match.substring(1);
                                         btnColor.add(match);
@@ -173,17 +189,24 @@ public class TrainList extends Activity {
                                  */
                                 @Override
                                 public boolean onLongClick(final View v) {
-                                    //if the button is longclicked and not already red, it changes the color to red and updates S_W attribute
+                                    //if the button is longclicked, it changes the color to red and updates S_W attribute
 
                                     final Button b = (Button) v;
+                                    boolean wasRed = false;
 
                                     String id = b.getText().toString();
                                     String match = "";
-                                    for(String n:btnColor){
-                                        if(id.equals(n.substring(1))){
+                                    for (String n : btnColor) {
+                                        if (id.equals(n.substring(1))) {
                                             match = n;
                                         }
                                     }
+
+                                    if(match.substring(0,1).equals("R"))
+                                        wasRed = true;
+
+                                    final boolean isRed = wasRed;
+
                                     btnColor.remove(match);
                                     match = "R" + match.substring(1);
                                     btnColor.add(match);
@@ -191,16 +214,22 @@ public class TrainList extends Activity {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(TrainList.this);
                                     ListView lv = new ListView(TrainList.this);
                                     builder.setView(lv);
+
                                     builder.setMessage("Are you sure you want to change the status of the car?");
                                     builder.setCancelable(false);
 
                                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
+
                                             v.setBackgroundColor(Color.RED);
                                             Intent i = new Intent(TrainList.this, Inspection.class);
+
+                                            //if already was red, then put extra wasRed = True, else false
+
                                             i.putExtra("CarID", b.getText().toString());
                                             i.putExtra("Details", getIntent().getExtras().getStringArray("Details"));
+                                            i.putExtra("WasRed", isRed);
 
                                             updateSW("r" + b.getText());
 
@@ -216,10 +245,10 @@ public class TrainList extends Activity {
                                     });
 
 
-                                        AlertDialog alertWW = builder.create();
-                                        alertWW.show();
+                                    AlertDialog alertWW = builder.create();
+                                    alertWW.show();
 
-                                        return true;
+                                    return true;
 
                                 }
                             });
@@ -231,9 +260,13 @@ public class TrainList extends Activity {
                         lblCars.setText(e.toString());
                         lblCars.setTextColor(Color.RED);
                     }
+
+                    finishBtn(GridCars);
+                    ProgressBar pg = (ProgressBar) findViewById(R.id.pgTrainCars);
+                    pg.setVisibility(View.INVISIBLE);
                 }
 
-                finishBtn(GridCars);
+
             }
 
         }.execute();
@@ -266,7 +299,6 @@ public class TrainList extends Activity {
                         fdetails[fdetails.length-1] = "f";
 
                         i.putExtra("Details", fdetails);
-
                         startActivity(i);
                     }
                 });
@@ -301,7 +333,7 @@ public class TrainList extends Activity {
  */
 class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
     public Context context;
-    public CClient(Context myContext){
+    CClient(Context myContext){
         this.context = myContext;
     }
     /**
@@ -322,34 +354,33 @@ class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
             String username = br.readLine().substring(8);
             String account = br.readLine().substring(9);
             String pass = br.readLine().substring(9);
+            String strCid = " ";
+
+            if(Cars.length>0 && Cars[0]!=null){
+               CharSequence cid = Cars[0];
+               strCid = (String)cid;
+            }
 
             CloudantClient client = ClientBuilder.account(account)
                     .username(username)
                     .password(pass)
                     .build();
 
+
             String dbname = "train-inspection"; //database name
-
             Database dbCars = client.database(dbname, false); //new client for datbase manipulation
-            dbCars.createIndex("trainid", "trainid", "json", new IndexField[]{ //new index for querying
-                    new IndexField("trainid", IndexField.SortOrder.asc),
-                    new IndexField("loc", IndexField.SortOrder.asc),
-                    new IndexField("_id", IndexField.SortOrder.asc)
-            });
-
-
-            if (TrainList.CarID.substring(0, 1).equals("r")) { //if the user longclicks it concatenates a r to the front of the car id
-                String id = TrainList.CarID.substring(1, TrainList.CarID.length());
+            if (strCid.substring(0, 1).equals("r")) { //if the user longclicks it concatenates a r to the front of the car id
+                String id = strCid.substring(1, strCid.length());
 
                 JsonObject j = (dbCars.find(JsonObject.class, id)); //makes json object with attribute "S_W" = true, and id = car id
                 j.addProperty("S_W", true);
-                TrainList.CarID = "d";
+                strCid = "d";
                 dbCars.update(j);
                 dbCars.save(j);
 
 
-            } else if (TrainList.CarID.substring(0, 1).equals("g")) {
-                String id = TrainList.CarID.substring(1, TrainList.CarID.length());
+            } else if (strCid.substring(0, 1).equals("g")) {
+                String id = strCid.substring(1, strCid.length());
 
                 JsonObject j = (dbCars.find(JsonObject.class, id));
                 j.addProperty("S_W", false);
@@ -362,13 +393,20 @@ class CClient extends AsyncTask<CharSequence, Void, List<JsonObject>> {
 
             }
             dbname = "train-inspection";
-            dbCars = client.database(dbname, true);
+            dbCars = client.database(dbname, false);
 
-            List<JsonObject> cars = dbCars.findByIndex("\"selector\": {" +
+
+            List<JsonObject> c = new ArrayList<>();
+            //c = dbCars.findByIndex("\"selector\": {" +
+            //                "\"trainid\": \"" + TrainList.TrainID + "\" }", JsonObject.class,
+            //        new FindByIndexOptions().fields("_id").fields("_rev").fields("loc").fields("type").fields("S_W")); //query result
+
+            //might need to make this a globally passed train, which the c value can change during this query.
+            //TrainObject train = new TrainObject(TrainList.TrainID);
+
+            return dbCars.findByIndex("\"selector\": {" +
                             "\"trainid\": \"" + TrainList.TrainID + "\" }", JsonObject.class,
-                    new FindByIndexOptions().fields("_id").fields("_rev").fields("loc").fields("S_W"));   //the query to match the trainid to all cars with the same trainid
-
-            return cars; //query result
+                    new FindByIndexOptions().fields("_id").fields("loc").fields("type").fields("S_W").fields("reporting_mark")); //query result
 
         } catch (Exception e) {
             return null;
