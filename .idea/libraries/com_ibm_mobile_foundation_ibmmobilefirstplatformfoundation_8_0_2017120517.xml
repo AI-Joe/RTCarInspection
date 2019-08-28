@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.ibm.mobile.foundation:ibmmobilefirstplatformfoundation-8.0.2017120517">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ibmmobilefirstplatformfoundation-8.0.2017120517.aar/979608a08eab4b7d4095e10cc574ce26/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ibmmobilefirstplatformfoundation-8.0.2017120517.aar/979608a08eab4b7d4095e10cc574ce26/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.mobile.foundation/ibmmobilefirstplatformfoundation/8.0.2017120517/8f0a5daaff163ece59051f5e21140e548eb0804b/ibmmobilefirstplatformfoundation-8.0.2017120517-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="com.ibm.mobile.foundation:ibmmobilefirstplatformfoundationjsonstore-8.0.2017092509">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ibmmobilefirstplatformfoundationjsonstore-8.0.2017092509.aar/b4320e54e9f6ee3b8919b3aee2913d7c/jars/libs/sqlcipher.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ibmmobilefirstplatformfoundationjsonstore-8.0.2017092509.aar/b4320e54e9f6ee3b8919b3aee2913d7c/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ibmmobilefirstplatformfoundationjsonstore-8.0.2017092509.aar/b4320e54e9f6ee3b8919b3aee2913d7c/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.mobile.foundation/ibmmobilefirstplatformfoundationjsonstore/8.0.2017092509/8f0a5daaff163ece59051f5e21140e548eb0804b/ibmmobilefirstplatformfoundationjsonstore-8.0.2017092509-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
